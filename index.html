@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Where is It?</title>
+        
+        <style type="text/css">
+            /* Set a size for our map container, the Google Map will take up 100% of this container */
+            html, body {
+                height: 90%;
+                margin: 0;
+            }
+            #map {
+                min-height: 100%;
+            }
+        </style>
+        
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLuUjHMZ3C3XeygfACJ7woSdZgQPzBGMY"></script>
+        
+        <script type="text/javascript">
+
+         // global "map" variable
+          var map = null;
+          var marker = null;
+
+          // When the window has finished loading create our google map below
+          google.maps.event.addDomListener(window, 'load', init);
+
+          var infowindow = new google.maps.InfoWindow(
+            { 
+              size: new google.maps.Size(150,50)
+            });
+
+          // A function to create the marker and set up the event window function 
+          function createMarker(latlng, name, html) {
+              var contentString = html;
+              var marker = new google.maps.Marker({
+                  position: latlng,
+                  map: map,
+                  zIndex: Math.round(latlng.lat()*-100000)<<5
+                  });
+
+              google.maps.event.addListener(marker, 'click', function() {
+                  infowindow.setContent(contentString); 
+                  infowindow.open(map,marker);
+                  });
+              google.maps.event.trigger(marker, 'click');    
+              return marker;
+          }
+
+           
+
+          function init() {
+            // create the map
+            var myOptions = {
+              zoom: 4,
+              center: new google.maps.LatLng(10.830962, 78.950580),
+              mapTypeControl: true,
+              mapTypeControlOptions: {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU},
+              navigationControl: true,
+              mapTypeId: google.maps.MapTypeId.ROADMAP,
+styles: [{"elementType":"labels.text","stylers":[{"visibility":"off"}]},{"featureType":"landscape.natural","elementType":"geometry.fill","stylers":[{"color":"#f5f5f2"},{"visibility":"on"}]},{"featureType":"administrative","stylers":[{"visibility":"off"}]},{"featureType":"transit","stylers":[{"visibility":"off"}]},{"featureType":"poi.attraction","stylers":[{"visibility":"off"}]},{"featureType":"landscape.man_made","elementType":"geometry.fill","stylers":[{"color":"#ffffff"},{"visibility":"on"}]},{"featureType":"poi.business","stylers":[{"visibility":"off"}]},{"featureType":"poi.medical","stylers":[{"visibility":"off"}]},{"featureType":"poi.place_of_worship","stylers":[{"visibility":"off"}]},{"featureType":"poi.school","stylers":[{"visibility":"off"}]},{"featureType":"poi.sports_complex","stylers":[{"visibility":"off"}]},{"featureType":"road.highway","elementType":"geometry","stylers":[{"color":"#ffffff"},{"visibility":"simplified"}]},{"featureType":"road.arterial","stylers":[{"visibility":"simplified"},{"color":"#ffffff"}]},{"featureType":"road.highway","elementType":"labels.icon","stylers":[{"color":"#ffffff"},{"visibility":"off"}]},{"featureType":"road.highway","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","stylers":[{"color":"#ffffff"}]},{"featureType":"road.local","stylers":[{"color":"#ffffff"}]},{"featureType":"poi.park","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"water","stylers":[{"color":"#71c8d4"}]},{"featureType":"landscape","stylers":[{"color":"#e5e8e7"}]},{"featureType":"poi.park","stylers":[{"color":"#8ba129"}]},{"featureType":"road","stylers":[{"color":"#ffffff"}]},{"featureType":"poi.sports_complex","elementType":"geometry","stylers":[{"color":"#c7c7c7"},{"visibility":"off"}]},{"featureType":"water","stylers":[{"color":"#a0d3d3"}]},{"featureType":"poi.park","stylers":[{"color":"#91b65d"}]},{"featureType":"poi.park","stylers":[{"gamma":1.51}]},{"featureType":"road.local","stylers":[{"visibility":"off"}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"visibility":"on"}]},{"featureType":"poi.government","elementType":"geometry","stylers":[{"visibility":"off"}]},{"featureType":"landscape","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"visibility":"simplified"}]},{"featureType":"road.local","stylers":[{"visibility":"simplified"}]},{"featureType":"road"},{"featureType":"road"},{},{"featureType":"road.highway"}]
+            }
+            map = new google.maps.Map(document.getElementById("map"),
+                                          myOptions);
+           
+            google.maps.event.addListener(map, 'click', function() {
+                  infowindow.close();
+                  });
+
+            google.maps.event.addListener(map, 'click', function(event) {
+            //call function to create marker
+                   if (marker) {
+                      marker.setMap(null);
+                      marker = null;
+                   }
+             marker = createMarker(event.latLng, "name", "<b>Location</b><br>"+event.latLng);
+            });
+
+          }
+
+        </script>
+    </head>
+    <body>
+        <!-- The element that will contain our Google Map. This is used in both the Javascript and CSS above. -->
+        <div id="map"></div>
+    </body>
+</html>
