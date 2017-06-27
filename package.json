@@ -1,0 +1,32 @@
+{
+  "name": "whereisit",
+  "version": "1.0.0",
+  "description": "A game to find cities in the world",
+  "main": "index.js",
+  "dependencies": {
+    "behavioral-metrics": "^1.0.0",
+    "csv": "^1.1.1",
+    "node-geo-distance": "^1.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ggovindan/whereisit.git"
+  },
+  "keywords": [
+    "nodejs",
+    "vue",
+    "Google",
+    "Maps",
+    "API"
+  ],
+  "author": "gugovind",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ggovindan/whereisit/issues"
+  },
+  "homepage": "https://github.com/ggovindan/whereisit#readme"
+}
