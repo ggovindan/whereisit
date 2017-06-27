@@ -9,7 +9,9 @@
 
 // utility to calculate geo-distance
 const geo = require('node-geo-distance');
+
 const Promise = require('bluebird');
+
 
 /**
 // White house
@@ -27,8 +29,10 @@ var coord2 = {
 geo.vincenty(coord1, coord2, function(dist) {
   console.log(dist);
 });
+<<<<<<< HEAD
 */
 
 /**
 Utility to get all the cities and the coordinates into an array
 */
+
