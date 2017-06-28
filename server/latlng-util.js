@@ -3,38 +3,54 @@ const fs = Promise.promisifyAll(require('fs'));
 const csv = require('csv');
 const geo = require('node-geo-distance');
 
+const sh = require('shelljs');
+
+//level 1
+const level0 = ['USA', 'GBR', 'FRA', 'ITA', 'ESP', 'MEX', 'AUS', 'CAN'];
+const level1 = ['IND', 'CHN', 'JPN', 'EGY'];
 
 class LatLng {
   constructor() {
     this.citiesList = [];
-    this.levels = {
-      level1: ['USA', 'GBR', 'FRA', 'ITA', 'ESP', 'MEX', 'AUS', 'CAN'],
-      level2: ['IND', 'CHN', 'JPN', 'EGY'],
-    }
+    this.levels = [];
     //read all the cities data
-    fs.readFileAsync('../static/simplemaps-worldcities-basic.csv', 'utf8')
+    fs.readFileAsync('static/simplemaps-worldcities-basic.csv', 'utf8')
       .then((data) => {
         csv.parse(data, (err, data) => {
           if (err) {
             throw new Error('error=', err);
           }
-          csv.transform(data, (data) => {
+          //we dont want the header
+          data.shift();
+
+          for (var i=0; i<data.length; i++) {
             var value = {
-              city: data[0],
-              lat: data[2],
-              lng: data[3],
-              country: data[5],
-              code_iso2: data[6],
-              code_iso3: data[7],
-              province: data[8],
+              city: data[i][0],
+              lat: data[i][2],
+              lng: data[i][3],
+              country: data[i][5],
+              code_iso2: data[i][6],
+              code_iso3: data[i][7],
+              province: data[i][8],
             };
             this.citiesList.push(value);
-            this.citiesList.sort((a, b) => {
-              return a.code_iso3 < b.code_iso3;
-            });
+          }
+          console.log('this.citiesList.length=', this.citiesList.length);
+          console.time('filter_level1');
+          //first lets filter out the cities based on level
+          this.levels[0] = this.citiesList.filter((city) => {
+            return (level0.indexOf(city.code_iso3) > -1);
           });
+          console.timeEnd('filter_level1');
+
+          console.time('filter_level2');
+          this.levels[1] = this.citiesList.filter((city) => {
+            return (level1.indexOf(city.code_iso3) > -1);
+          });
+          console.timeEnd('filter_level2');
         });
       });
+    console.timeEnd('reading_from_csv');
   }
 
   getCrowFlies(coord1, coord2) {
@@ -45,8 +61,18 @@ class LatLng {
   }
 
   getRandomList(level) {
+    const citiesList = this.levels[level];
+    console.log('citiesList=', citiesList);
+    const gameList = [];
 
+    for (var i=0; i<10; i++) {
+      const city = citiesList[Math.floor(Math.random() * citiesList.length)];
+      console.log(city);
+      gameList.push(city);
+    }
+    console.log('gameList=', gameList);
+    return gameList;
   }
 }
 
- module.exports = LatLng;
+ module.exports = new LatLng();
