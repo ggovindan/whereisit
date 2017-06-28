@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const latlng = require('./latlng-util');
 
 const app = express();
 const router = express.Router();
@@ -19,7 +20,10 @@ router.get('/ping', (req, res) => {
 // /api/v1/game:level
 router.get('/game:level', function(req, res) {
   const level = req.params.level;
-
+  console.log('level=', typeof level);
+  console.time('getting_cities');
+  res.status(200).send(JSON.parse(JSON.stringify({cities: latlng.getRandomList(parseInt(level))})));
+  console.timeEnd('getting_cities');
 });
 
 module.exports = app;
