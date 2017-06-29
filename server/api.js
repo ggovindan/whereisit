@@ -26,4 +26,13 @@ router.get('/game:level', function(req, res) {
   console.timeEnd('getting_cities');
 });
 
+// /api/v1/score
+router.post('/score', function(req, res) {
+  const coord1 = req.body.coord1;
+  const coord2 = req.body.coord2;
+  latlng.getScore(coord1, coord2, (score) => {
+    res.status(200).send({score: score});
+  });
+});
+
 module.exports = app;

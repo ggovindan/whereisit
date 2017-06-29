@@ -9,6 +9,7 @@ const sh = require('shelljs');
 const level0 = ['USA', 'GBR', 'FRA', 'ITA', 'ESP', 'MEX', 'AUS', 'CAN'];
 const level1 = ['IND', 'CHN', 'JPN', 'EGY'];
 
+
 class LatLng {
   constructor() {
     this.citiesList = [];
@@ -53,10 +54,20 @@ class LatLng {
     console.timeEnd('reading_from_csv');
   }
 
-  getCrowFlies(coord1, coord2) {
-    return geo.vincenty(coord1, coord2, (dist) => {
-      console.log(dist);
-      return dist;
+  getScore(coord1, coord2, callback) {
+    // Get crow flies
+
+    geo.vincenty(coord1, coord2, (dist) => {
+
+      //Now calculate points
+      const distKms = dist/1000;
+      const inverse = 1/distKms;
+      if (isFinite(inverse)) {
+        console.log('score=', Math.floor(inverse * 1000));
+        callback(Math.floor(inverse * 1000));
+        return;
+      }
+      callback(1000);
     });
   }
 
