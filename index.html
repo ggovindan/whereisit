@@ -3,16 +3,19 @@
 <html>
     <head>
         <title>Where is It?</title>
+  <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/base/jquery-ui.css" type="text/css" media="all">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         
         <style type="text/css">
-            /* Set a size for our map container, the Google Map will take up 100% of this container */
-            html, body {
-                height: 96%;
-                margin: 10;
-            }
-            #map {
-                min-height: 100%;
-            }
+        #timer {
+          border: 1px solid black;
+          background-color: #ff7f50;
+        }
+        #puzzle {
+          font-size: 20px;
+        }
         </style>
         
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCLuUjHMZ3C3XeygfACJ7woSdZgQPzBGMY"></script>
@@ -75,14 +78,53 @@ styles: [{"elementType":"labels.text","stylers":[{"visibility":"off"}]},{"featur
                       marker = null;
                    }
              marker = createMarker(event.latLng, "name", "<b>Location</b><br>"+event.latLng);
+
             });
 
           }
 
         </script>
+
+        <!-- my stuff -->
+
     </head>
     <body>
         <!-- The element that will contain our Google Map. This is used in both the Javascript and CSS above. -->
-        <div id="map"></div>
+        <div class="container-fluid" id="dipoza">
+          <div class="row">
+            <div class="col-sm-9"><div class="bg-info text-white" id="puzzle">{{ puzzle.city}} - {{puzzle.country }}</div></div>
+            <div class="col-sm-3" id="timer"></div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12" id="map" style="width:1280px; height:1080px; overflow: scroll;"></div>
+          </div>
+        </div>
+        
+        <!-- vuejs specific -->
+        <script src="node_modules/vue/dist/vue.js"></script>
+        <script src="node_modules/vue-resource/dist/vue-resource.js"></script>
+        <script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+        <script src="views/app.js"></script>
+
+        <!-- timer -->
+        <script>
+          var timeoutTime = 10; //secs
+          var distance = 10;
+          // Update the count down every 1 second
+          var x = setInterval(function() {
+            
+              
+              // Output the result in an element with id="demo"
+            document.getElementById("timer").innerHTML = distance + "s ";
+              distance--;
+              // If the count down is over, write some text 
+              if (distance < 0) {
+                  clearInterval(x);
+                  document.getElementById("timer").innerHTML = "EXPIRED";
+              }
+          }, 1000);
+
+
+        </script>
     </body>
 </html>
