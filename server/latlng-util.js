@@ -42,16 +42,17 @@ class LatLng {
           this.levels[0] = this.citiesList.filter((city) => {
             return (level0.indexOf(city.code_iso3) > -1);
           });
+          console.log('level0=', this.levels[0].length);
           console.timeEnd('filter_level1');
 
           console.time('filter_level2');
           this.levels[1] = this.citiesList.filter((city) => {
             return (level1.indexOf(city.code_iso3) > -1);
           });
+          console.log('level1=', this.levels[1].length);
           console.timeEnd('filter_level2');
         });
       });
-    console.timeEnd('reading_from_csv');
   }
 
   getScore(coord1, coord2, callback) {
@@ -72,6 +73,7 @@ class LatLng {
   }
 
   getRandomList(level) {
+    console.log('level=', level);
     const citiesList = this.levels[level];
     console.log('citiesList=', citiesList);
     const gameList = [];
