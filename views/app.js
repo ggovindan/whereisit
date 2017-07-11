@@ -1,7 +1,7 @@
 // app.js
 
 
-new Vue ({
+var myVue = new Vue ({
   el: "#dipoza",
 
   data: {
@@ -14,7 +14,15 @@ new Vue ({
               "code_iso3": "USA",
               "province": "Alaska"
             },
+    puzzleList: [],
     totalScore: 0,
+    countDownTime: 10,
+    solveTime: 0,
+  },
+
+  mounted: function() {
+    this.newPuzzle();
+    this.countDown();
   },
 
   methods: {
@@ -23,6 +31,36 @@ new Vue ({
         .then((result) => {
           totalScore = totalScore + parseInt(result.score);
         });
+    },
+
+    newPuzzle: function(level=0) {
+      if (this.totalScore > 10000) {
+        level = 1;
+      }
+        this.$http.get(`/game${level}`)
+          .then((result) => {
+            this.$set(this, 'puzzleList', result.data.cities);
+            const puzzle = this.puzzleList[Math.floor(Math.random() * 10)];
+            console.log(puzzle);
+            this.$set(this, 'puzzle', puzzle);
+          });
+    },
+
+    countDown: function() {
+      var vm = this;
+      vm.solveTime = this.countDownTime;
+      var timer = null;
+      timer = setInterval(function() {
+        if(vm.solveTime == 0) {
+          vm.solveTime = 'timeout!';
+          // call the answer function that will put the green dot
+
+          placeAnswerMarker({lat: parseFloat(vm.puzzle.lat), lng: parseFloat(vm.puzzle.lng)},
+            `<b>${vm.puzzle.city}, ${vm.puzzle.province}, ${vm.puzzle.country}</b><br>`);
+          return clearInterval(timer);
+        }
+        vm.solveTime -= 1;
+      }, 1000);
     },
 
     start() {
