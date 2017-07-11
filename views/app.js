@@ -1,5 +1,6 @@
 // app.js
 
+Vue.http.options.emulateJSON = true;
 
 var myVue = new Vue ({
   el: "#dipoza",
@@ -27,9 +28,12 @@ var myVue = new Vue ({
 
   methods: {
     score: function(coord1, coord2) {
-      this.$http.post('/api/v1/score')
+      let formData = new FormData({coord1: coord1, coord2: coord2});
+      this.$http.post('/score', JSON.stringify({coord1: coord1, coord2: coord2}))
         .then((result) => {
-          totalScore = totalScore + parseInt(result.score);
+          var temp = this.totalScore;
+          temp += parseInt(result.data.score);
+          this.$set(this, 'totalScore', temp);
         });
     },
 
@@ -41,7 +45,6 @@ var myVue = new Vue ({
           .then((result) => {
             this.$set(this, 'puzzleList', result.data.cities);
             const puzzle = this.puzzleList[Math.floor(Math.random() * 10)];
-            console.log(puzzle);
             this.$set(this, 'puzzle', puzzle);
           });
     },
@@ -54,7 +57,6 @@ var myVue = new Vue ({
         if(vm.solveTime == 0) {
           vm.solveTime = 'timeout!';
           // call the answer function that will put the green dot
-
           placeAnswerMarker({lat: parseFloat(vm.puzzle.lat), lng: parseFloat(vm.puzzle.lng)},
             `<b>${vm.puzzle.city}, ${vm.puzzle.province}, ${vm.puzzle.country}</b><br>`);
           return clearInterval(timer);

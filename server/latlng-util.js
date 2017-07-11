@@ -57,15 +57,24 @@ class LatLng {
 
   getScore(coord1, coord2, callback) {
     // Get crow flies
-
+    console.log('coord1='+JSON.stringify(coord1)+' coord2='+JSON.stringify(coord2));
+    if (coord1.lat) {
+      coord1.latitude = coord1.lat;
+      coord1.longitude = coord1.lng;
+    }
+    if(coord2.lat) {
+      coord2.latitude = coord2.lat;
+      coord2.longitude = coord2.lng;
+    }
     geo.vincenty(coord1, coord2, (dist) => {
 
       //Now calculate points
+      console.log('distance=', dist)
       const distKms = dist/1000;
       const inverse = 1/distKms;
       if (isFinite(inverse)) {
-        console.log('score=', Math.floor(inverse * 1000));
-        callback(Math.floor(inverse * 1000));
+        console.log('score=', Math.floor(inverse * 10000));
+        callback(Math.floor(inverse * 10000));
         return;
       }
       callback(1000);

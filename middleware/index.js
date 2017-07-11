@@ -1,10 +1,8 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+
 const latlng = require('../server/latlng-util');
 
 const router = express.Router();
-
-router.use(bodyParser.json());
 
 exports.ping = (req, res) => {
   console.log('hitting ping');
@@ -15,8 +13,6 @@ exports.ping = (req, res) => {
 
 exports.newGame = (req, res) => {
   const level = req.params.level;
-  console.log('level=', typeof level);
-  console.log('level dip=', level);
   console.time('getting_cities');
   res.status(200).send(JSON.parse(JSON.stringify({cities: latlng.getRandomList(parseInt(level))})));
   console.timeEnd('getting_cities');

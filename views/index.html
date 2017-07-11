@@ -41,8 +41,11 @@
         <div class="col-md-2" style="background-color:orange;">
           <h3 v-text="solveTime" align="center">{{}}</h3>
         </div>
-        <div class="col-md-10" style="background-color:yellow;">
+        <div class="col-md-8" style="background-color:yellow;">
           <h3 align="center">{{ puzzle.city}} , {{ puzzle.country }}</h3>
+        </div>
+        <div class="col-md-2" style="background-color:grey;">
+          <h3 align="center" style="color:white">score: {{ totalScore }}</h3>
         </div>
       </div>
     </div>
@@ -110,6 +113,8 @@ styles: [{"elementType":"labels.text","stylers":[{"visibility":"off"}]},{"featur
           position: latLng,
           map: map
         });
+        // call the vuejs function to calculate the score
+        myVue.score(latLng, {latitude: marker.getPosition().lat(), longitude: marker.getPosition().lng()});
         infowindow.setContent(info);
         infowindow.open(map, answerMarker);
         map.panTo(latLng);

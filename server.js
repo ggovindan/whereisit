@@ -1,5 +1,6 @@
 const express = require('express');
 const apiRoutes = require('./middleware');
+const bodyParser = require('body-parser');
 
 var app = module.exports = express();
 
@@ -7,6 +8,7 @@ app.engine('html', require('ejs').renderFile);
 app.set('views', __dirname+'/views');
 app.set('view engine', 'html');
 app.use(express.static(__dirname + '/'));
+app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
   res.render('index');
