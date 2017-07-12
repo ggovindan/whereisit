@@ -3,8 +3,6 @@ const fs = Promise.promisifyAll(require('fs'));
 const csv = require('csv');
 const geo = require('node-geo-distance');
 
-const sh = require('shelljs');
-
 //level 1
 const level0 = ['USA', 'GBR', 'FRA', 'ITA', 'ESP', 'MEX', 'AUS', 'CAN'];
 const level1 = ['IND', 'CHN', 'JPN', 'EGY'];
