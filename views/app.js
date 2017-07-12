@@ -19,11 +19,12 @@ var myVue = new Vue ({
     totalScore: 0,
     countDownTime: 10,
     solveTime: 0,
+    timer: null,
   },
 
   mounted: function() {
     this.newPuzzle();
-    this.countDown();
+    //this.countDown();
   },
 
   methods: {
@@ -44,24 +45,42 @@ var myVue = new Vue ({
         this.$http.get(`/game${level}`)
           .then((result) => {
             this.$set(this, 'puzzleList', result.data.cities);
-            const puzzle = this.puzzleList[Math.floor(Math.random() * 10)];
-            this.$set(this, 'puzzle', puzzle);
+            this.nextPuzzle();
+            // const puzzle = this.puzzleList[Math.floor(Math.random() * 10)];
+            // this.$set(this, 'puzzle', puzzle);
           });
+    },
+
+    nextPuzzle: function() {
+      if (this.puzzleList.length === 0) {
+        this.newPuzzle(0);
+        return;
+      }
+      const puzzle = this.puzzleList.pop();
+      this.$set(this,  'puzzle', puzzle);
+      clearMarkerFromMap();
+      this.countDown();
     },
 
     countDown: function() {
       var vm = this;
       vm.solveTime = this.countDownTime;
-      var timer = null;
-      timer = setInterval(function() {
-        if(vm.solveTime == 0) {
-          vm.solveTime = 'timeout!';
+      console.log("SETTING TIMMER !!!");
+      //if timer is already running then return
+      if (this.timer != null) {
+        return;
+      }
+      this.timer = setInterval(function() {
+        if(vm.solveTime < 1 || vm.solveTime === 0) {
+          vm.solveTime = 'timeout';
           // call the answer function that will put the green dot
           placeAnswerMarker({lat: parseFloat(vm.puzzle.lat), lng: parseFloat(vm.puzzle.lng)},
             `<b>${vm.puzzle.city}, ${vm.puzzle.province}, ${vm.puzzle.country}</b><br>`);
-          return clearInterval(timer);
+          return clearInterval(this.timer);
+
+        } else if(vm.solveTime > 0) {
+          vm.solveTime -= 1;
         }
-        vm.solveTime -= 1;
       }, 1000);
     },
 

@@ -32,7 +32,7 @@
       <div class="row">
           <div class="col-sm-12" align="center" style="background-color:#00cccc">
             <div style="margin-top:10px">
-              <button class="btn btn-danger" v-on:click="newPuzzle" id="newPuzzleButton">New Puzzle</button>
+              <button class="btn btn-danger" v-on:click="nextPuzzle" id="newPuzzleButton">New Puzzle</button>
               <button class="btn btn-warning" v-on:click="solve">Solve</button>
             </div>
           </div>
@@ -114,10 +114,24 @@ styles: [{"elementType":"labels.text","stylers":[{"visibility":"off"}]},{"featur
           map: map
         });
         // call the vuejs function to calculate the score
-        myVue.score(latLng, {latitude: marker.getPosition().lat(), longitude: marker.getPosition().lng()});
+        if (marker != null) {
+          myVue.score(latLng, {latitude: marker.getPosition().lat(), longitude: marker.getPosition().lng()});
+        }
         infowindow.setContent(info);
         infowindow.open(map, answerMarker);
         map.panTo(latLng);
+      }
+
+      function clearMarkerFromMap() {
+        if (marker != null) {
+          marker.setMap(null);
+          marker = null;
+        }
+
+        if (answerMarker != null) {
+          answerMarker.setMap(null);
+          answerMarker = null;
+        }
       }
 
 
