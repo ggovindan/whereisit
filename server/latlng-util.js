@@ -51,11 +51,14 @@ class LatLng {
                   capital: false,
                 };
 
-                _.find();
                 // mark the city that is a capital with a flag
-                if (this.capitals.indexOf(data[i][0]) > -1) {
+                if(_.find(this.capitals, {'city': data[i][0], 'country': data[i][5]})) {
                   value.capital = true;
                 }
+                // mark the city that is a capital with a flag
+                // if (this.capitals.indexOf(data[i][0]) > -1) {
+                //   value.capital = true;
+                // }
                 this.citiesList.push(value);
               }
 
