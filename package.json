@@ -4,7 +4,6 @@
   "description": "A game to find cities in the world",
   "main": "server.js",
   "dependencies": {
-    "behavioral-metrics": "^1.0.0",
     "body-parser": "^1.17.2",
     "bootstrap": "^3.3.7",
     "csv": "^1.1.1",
