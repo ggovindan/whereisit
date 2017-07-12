@@ -2,12 +2,13 @@ const express = require('express');
 const apiRoutes = require('./middleware');
 const bodyParser = require('body-parser');
 
-var app = module.exports = express();
+const app = express();
 
 app.engine('html', require('ejs').renderFile);
-app.set('views', __dirname+'/views');
+
+app.set('views', `${__dirname}/views`);
 app.set('view engine', 'html');
-app.use(express.static(__dirname + '/'));
+app.use(express.static(`${__dirname}/`));
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
@@ -20,6 +21,6 @@ app.get('/ping', apiRoutes.ping);
 
 app.post('/score', apiRoutes.score);
 
-app.listen(process.env.PORT || 5000, function() {
+app.listen(process.env.PORT || 5000, () => {
   console.log('listening on http://localhost:5000');
 });

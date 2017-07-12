@@ -2,19 +2,19 @@
 
 Vue.http.options.emulateJSON = true;
 
-var myVue = new Vue ({
-  el: "#dipoza",
+const myVue = new Vue({
+  el: '#dipoza',
 
   data: {
     puzzle: {
-              "city": "Fort Yukon",
-              "lat": "66.56468243",
-              "lng": "-145.2737789",
-              "country": "United States of America",
-              "code_iso2": "US",
-              "code_iso3": "USA",
-              "province": "Alaska"
-            },
+      city: 'Fort Yukon',
+      lat: '66.56468243',
+      lng: '-145.2737789',
+      country: 'United States of America',
+      code_iso2: 'US',
+      code_iso3: 'USA',
+      province: 'Alaska',
+    },
     puzzleList: [],
     totalScore: 0,
     countDownTime: 10,
@@ -22,27 +22,26 @@ var myVue = new Vue ({
     timer: null,
   },
 
-  mounted: function() {
+  mounted() {
     this.newPuzzle();
-    //this.countDown();
+    // this.countDown();
   },
 
   methods: {
-    score: function(coord1, coord2) {
-      let formData = new FormData({coord1: coord1, coord2: coord2});
-      this.$http.post('/score', JSON.stringify({coord1: coord1, coord2: coord2}))
+    score(coord1, coord2) {
+      this.$http.post('/score', JSON.stringify({ coord1, coord2 }))
         .then((result) => {
-          var temp = this.totalScore;
+          let temp = this.totalScore;
           temp += parseInt(result.data.score);
           this.$set(this, 'totalScore', temp);
         });
     },
 
-    newPuzzle: function(level=0) {
+    newPuzzle(level = 0) {
       if (this.totalScore > 10000) {
         level = 1;
       }
-        this.$http.get(`/game${level}`)
+      this.$http.get(`/game${level}`)
           .then((result) => {
             this.$set(this, 'puzzleList', result.data.cities);
             this.nextPuzzle();
@@ -51,34 +50,33 @@ var myVue = new Vue ({
           });
     },
 
-    nextPuzzle: function() {
+    nextPuzzle() {
       if (this.puzzleList.length === 0) {
         this.newPuzzle(0);
         return;
       }
       const puzzle = this.puzzleList.pop();
-      this.$set(this,  'puzzle', puzzle);
+      this.$set(this, 'puzzle', puzzle);
       clearMarkerFromMap();
       this.countDown();
     },
 
-    countDown: function() {
-      var vm = this;
+    countDown() {
+      const vm = this;
       vm.solveTime = this.countDownTime;
-      console.log("SETTING TIMMER !!!");
-      //if timer is already running then return
+      console.log('SETTING TIMMER !!!');
+      // if timer is already running then return
       if (this.timer != null) {
         return;
       }
-      this.timer = setInterval(function() {
-        if(vm.solveTime < 1 || vm.solveTime === 0) {
+      this.timer = setInterval(function () {
+        if (vm.solveTime < 1 || vm.solveTime === 0) {
           vm.solveTime = 'timeout';
           // call the answer function that will put the green dot
-          placeAnswerMarker({lat: parseFloat(vm.puzzle.lat), lng: parseFloat(vm.puzzle.lng)},
+          placeAnswerMarker({ lat: parseFloat(vm.puzzle.lat), lng: parseFloat(vm.puzzle.lng) },
             `<b>${vm.puzzle.city}, ${vm.puzzle.province}, ${vm.puzzle.country}</b><br>`);
           return clearInterval(this.timer);
-
-        } else if(vm.solveTime > 0) {
+        } else if (vm.solveTime > 0) {
           vm.solveTime -= 1;
         }
       }, 1000);
@@ -89,6 +87,6 @@ var myVue = new Vue ({
       setTimeout(() => {
         this.$Progress.finish();
       }, 10000);
-    }
-  }
-})
+    },
+  },
+});
