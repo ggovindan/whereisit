@@ -17,7 +17,7 @@ const myVue = new Vue({
     },
     puzzleList: [],
     totalScore: 0,
-    countDownTime: 10,
+    countDownTime: 20,
     solveTime: 0,
     timer: null,
   },
